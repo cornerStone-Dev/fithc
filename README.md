@@ -1,4 +1,4 @@
-# fith
+# fithc
 
 This project is a compiler for the fith programming language.
 
