@@ -1,0 +1,12 @@
+# ignored files
+bin/
+test/
+tool/
+tool_output/
+SQLite3_Helper/
+gen/
+sqlite3/
+fith_src/script.fith
+*.geany
+projects
+session.fith
