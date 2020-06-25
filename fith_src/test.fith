@@ -194,14 +194,14 @@ clear -2
 ( top of stack value )	 \drop 'value on stack is' p . drop
 end 'after case' p .
 clear
-recursionTest:
+recursion^Test:
 
-	dup 0 == if{ return }
+	local_recursion<: dup 0 == if{ return }
 	1 - dup i2s p
-	recursionTest
+	local_recursion:>
 ;
 
-10 recursionTest
+10 recursion^Test
 \~ .
 
 \~ clear -2

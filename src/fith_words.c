@@ -129,7 +129,7 @@ _fith_array_get(Context1 *c, Registers r) __attribute__((always_inline));
 static inline Registers
 _fith_array_set(Context1 *c, Registers r) __attribute__((always_inline));
 static void *
-_fith_scratchPad_alloc(Context1 *c, size_t bytes);
+_fith_scratchPad_alloc(Context1 *c, u32 bytes);
 static Registers
 _fith_loadf(Context1 *c, Registers r);
 static Registers
@@ -334,10 +334,10 @@ _fith_insertionSort_s64(s64 *dsti, const size_t size)
 
 // scratchpad is a circular buffer, return next slot
 static void *
-_fith_scratchPad_alloc(Context1 *c, size_t bytes)
+_fith_scratchPad_alloc(Context1 *c, u32 bytes)
 {
 	void *p;
-	u64 next_index;
+	u32 next_index;
 	
 	// round bytes up to nearest multiple of 8
 	bytes=(bytes+7)/8*8;

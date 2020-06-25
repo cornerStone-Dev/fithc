@@ -25,9 +25,11 @@
 	mangled_string_lit = ['] ([^'\x00\x03] | ([\\] [']))* "\x00";
 	char_lit = [`] ([^`\x03] | ([\\] [`]))* [`];
 	integer = "-"? (oct | dec | hex);
-	word = [a-zA-Z_]([a-zA-Z_0-9?!#.{}[-]|"]")*;
+	word = [a-zA-Z_]([a-zA-Z_0-9?!#.{}[-]|"]"|"^")*;
 	function_call_addr = "@" word ;
 	function_definition = word ":";
+	goto_jump = word ":>";
+	goto_label = word "<:";
 	var = "$" word; // push value on stack, if exists
 	var_assign = "=$" word; // pop top of stack and assign to value, create variable
 	var_addr = "@$" word; // push address on stack
@@ -2162,7 +2164,7 @@ loop: // label for looping within the lexxer
 									*c->buffers[c->output_context] = '$';
 									c->buffers[c->output_context]++;
 									c->buffers[c->output_context]+=
-									base64conversion(c->buffers[c->output_context], (*start-32));
+									base64conversion(c->buffers[c->output_context], (*start-30));
 									start++;
 								}
 							}
@@ -2206,7 +2208,7 @@ loop: // label for looping within the lexxer
 								*c->buffers[c->output_context] = '$';
 								c->buffers[c->output_context]++;
 								c->buffers[c->output_context]+=
-								base64conversion(c->buffers[c->output_context], (*start-32));
+								base64conversion(c->buffers[c->output_context], (*start-30));
 								start++;
 							}
 						}
@@ -2250,7 +2252,7 @@ loop: // label for looping within the lexxer
 								*c->buffers[c->output_context] = '$';
 								c->buffers[c->output_context]++;
 								c->buffers[c->output_context]+=
-								base64conversion(c->buffers[c->output_context], (*start-32));
+								base64conversion(c->buffers[c->output_context], (*start-30));
 								start++;
 							}
 						}
@@ -2308,7 +2310,7 @@ loop: // label for looping within the lexxer
 									*c->buffers[c->output_context] = '$';
 									c->buffers[c->output_context]++;
 									c->buffers[c->output_context]+=
-									base64conversion(c->buffers[c->output_context], (*start-32));
+									base64conversion(c->buffers[c->output_context], (*start-30));
 									start++;
 								}
 							}
@@ -2352,7 +2354,7 @@ loop: // label for looping within the lexxer
 								*c->buffers[c->output_context] = '$';
 								c->buffers[c->output_context]++;
 								c->buffers[c->output_context]+=
-								base64conversion(c->buffers[c->output_context], (*start-32));
+								base64conversion(c->buffers[c->output_context], (*start-30));
 								start++;
 							}
 						}
@@ -2395,7 +2397,7 @@ loop: // label for looping within the lexxer
 								*c->buffers[c->output_context] = '$';
 								c->buffers[c->output_context]++;
 								c->buffers[c->output_context]+=
-								base64conversion(c->buffers[c->output_context], (*start-32));
+								base64conversion(c->buffers[c->output_context], (*start-30));
 								start++;
 							}
 						}
@@ -2477,7 +2479,7 @@ loop: // label for looping within the lexxer
 							*c->buffers[c->output_context] = '$';
 							c->buffers[c->output_context]++;
 							c->buffers[c->output_context]+=
-							base64conversion(c->buffers[c->output_context], (*start_local-32));
+							base64conversion(c->buffers[c->output_context], (*start_local-30));
 							start_local++;
 						}
 					}
@@ -2584,7 +2586,7 @@ loop: // label for looping within the lexxer
 					*c->buffers[c->output_context] = '$';
 					c->buffers[c->output_context]++;
 					c->buffers[c->output_context]+=
-					base64conversion(c->buffers[c->output_context], (*start-32));
+					base64conversion(c->buffers[c->output_context], (*start-30));
 					start++;
 				}
 			}
@@ -2603,6 +2605,44 @@ loop: // label for looping within the lexxer
 		
 		
 		//YYCURSOR-=lex_if_else(&YYCURSOR, 2, 0); // skip definition
+		goto loop;
+	}
+	
+	goto_jump {
+		tc = *(YYCURSOR-2);
+		*(YYCURSOR-2)=0;
+		if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
+				<(128*1024*c->multiple[c->output_context]-64)){
+			c->buffers[c->output_context]+=
+				sprintf((char *)c->buffers[c->output_context],
+					"goto %s;", start);
+		} else {
+			if(expand_buffer(c)==0)
+			{
+				return r;
+			}
+		}
+		*(YYCURSOR-2)=tc;
+		
+		goto loop;
+	}
+	
+	goto_label {
+		tc = *(YYCURSOR-2);
+		*(YYCURSOR-2)=0;
+		if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
+				<(128*1024*c->multiple[c->output_context]-64)){
+			c->buffers[c->output_context]+=
+				sprintf((char *)c->buffers[c->output_context],
+					"%s:", start);
+		} else {
+			if(expand_buffer(c)==0)
+			{
+				return r;
+			}
+		}
+		*(YYCURSOR-2)=tc;
+		
 		goto loop;
 	}
 	*/                               // end of re2c block

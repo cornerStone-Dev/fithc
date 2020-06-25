@@ -251,7 +251,7 @@ save_variable(u8 *start, u64 len, s64 val, u64 flags, Context1 *c)
 							*c->buffers[2] = '$';
 							c->buffers[2]++;
 							c->buffers[2]+=
-							base64conversion(c->buffers[2], (*start_local-22));
+							base64conversion(c->buffers[2], (*start_local-30));
 							start_local++;
 						}
 					}
@@ -272,7 +272,7 @@ save_variable(u8 *start, u64 len, s64 val, u64 flags, Context1 *c)
 							*c->buffers[1] = '$';
 							c->buffers[1]++;
 							c->buffers[1]+=
-							base64conversion(c->buffers[1], (*start_local-32));
+							base64conversion(c->buffers[1], (*start_local-30));
 							start_local++;
 						}
 					}
@@ -316,7 +316,7 @@ save_variable(u8 *start, u64 len, s64 val, u64 flags, Context1 *c)
 						*c->buffers[c->output_context] = '$';
 						c->buffers[c->output_context]++;
 						c->buffers[c->output_context]+=
-						base64conversion(c->buffers[c->output_context], (*start_local-32));
+						base64conversion(c->buffers[c->output_context], (*start_local-30));
 						start_local++;
 					}
 				}
@@ -353,7 +353,7 @@ save_variable(u8 *start, u64 len, s64 val, u64 flags, Context1 *c)
 							*c->buffers[c->output_context] = '$';
 							c->buffers[c->output_context]++;
 							c->buffers[c->output_context]+=
-							base64conversion(c->buffers[c->output_context], (*start_local-32));
+							base64conversion(c->buffers[c->output_context], (*start_local-30));
 							start_local++;
 						}
 					}
@@ -391,7 +391,7 @@ save_variable(u8 *start, u64 len, s64 val, u64 flags, Context1 *c)
 							*c->buffers[c->output_context] = '$';
 							c->buffers[c->output_context]++;
 							c->buffers[c->output_context]+=
-							base64conversion(c->buffers[c->output_context], (*start_local-32));
+							base64conversion(c->buffers[c->output_context], (*start_local-30));
 							start_local++;
 						}
 					}
