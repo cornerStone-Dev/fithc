@@ -115,7 +115,7 @@ _fith_clear(Context1 *c, Registers r) __attribute__((always_inline));
 static Registers
 _fith_sleep(Context1 *c, Registers r);
 static Registers
-_fith_array(Context1 *c, Registers r);
+_fith_array_alloc(Context1 *c, Registers r);
 static Registers
 _fith_malloc(Context1 *c, Registers r);
 static inline Registers
@@ -873,16 +873,15 @@ _fith_sleep(Context1 *c, Registers r)
 }
 
 static Registers
-_fith_array(Context1 *c, Registers r)
+_fith_array_alloc(Context1 *c, Registers r)
 {
-	// allocate array, 8 byte header
-	u64 tmp = r.tos.i*8+8;
+	u64 tmp = r.tos.i*8;
 	r.tos.s= malloc(tmp);
-	if (r.tos.s == 0 )
+	if (r.tos.s == 0)
 	{
-		printf("malloc error!!!\n");
+		printf("_fith_array_alloc: malloc error!!!\n");
 	}
-	r.tos.v->i = tmp>>3;
+	//r.tos.v->i = tmp>>3;
 	return r;
 }
 
@@ -890,7 +889,7 @@ static inline Registers
 _fith_array_get(Context1 *c, Registers r)
 {
 	r.sp-=1;
-	r.tos = r.tos.v[r.sp->i+1];
+	r.tos = r.tos.v[r.sp->i];
 	return r;
 }
 
@@ -898,7 +897,37 @@ static inline Registers
 _fith_array_set(Context1 *c, Registers r)
 {
 	r.sp-=3;
-	r.tos.v[(r.sp+2)->i+1] = *(r.sp+1);
+	r.tos.v[(r.sp+2)->i] = *(r.sp+1);
+	r.tos = *r.sp;
+	return r;
+}
+
+static Registers
+_fith_byte_array_alloc(Context1 *c, Registers r)
+{
+	u64 tmp = r.tos.i;
+	r.tos.s= malloc(tmp);
+	if (r.tos.s == 0)
+	{
+		printf("_fith_array_alloc: malloc error!!!\n");
+	}
+	//r.tos.v->i = tmp>>3;
+	return r;
+}
+
+static inline Registers
+_fith_byte_array_get(Context1 *c, Registers r)
+{
+	r.sp-=1;
+	r.tos.i = r.tos.s[r.sp->i];
+	return r;
+}
+
+static inline Registers
+_fith_byte_array_set(Context1 *c, Registers r)
+{
+	r.sp-=3;
+	r.tos.s[(r.sp+2)->i] = (u8)((r.sp+1)->i);
 	r.tos = *r.sp;
 	return r;
 }

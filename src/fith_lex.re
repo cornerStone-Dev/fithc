@@ -2101,7 +2101,7 @@ loop: // label for looping within the lexxer
 				<(128*1024*c->multiple[c->output_context]-64)){
 			c->buffers[c->output_context]+=
 				sprintf((char *)c->buffers[c->output_context],
-					"r=_fith_array(c,r);");
+					"r=_fith_array_alloc(c,r);");
 		} else {
 			if(expand_buffer(c)==0)
 			{
@@ -2111,13 +2111,13 @@ loop: // label for looping within the lexxer
 		goto loop;
 	}
 
-	"[].len" {
-		STACK_CHECK_DOWN_R(-1)
+	"[b]" {
+		STACK_CHECK_DOWN(-2)
 		if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
 				<(128*1024*c->multiple[c->output_context]-64)){
 			c->buffers[c->output_context]+=
 				sprintf((char *)c->buffers[c->output_context],
-					"r=_fith_array_len(c,r);");
+					"r=_fith_byte_array_get(c,r);");
 		} else {
 			if(expand_buffer(c)==0)
 			{
@@ -2126,6 +2126,54 @@ loop: // label for looping within the lexxer
 		}
 		goto loop;
 	}
+
+	"=[b]" {
+		STACK_CHECK_DOWN(-3)
+		if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
+				<(128*1024*c->multiple[c->output_context]-64)){
+			c->buffers[c->output_context]+=
+				sprintf((char *)c->buffers[c->output_context],
+					"r=_fith_byte_array_set(c,r);");
+		} else {
+			if(expand_buffer(c)==0)
+			{
+				return r;
+			}
+		}
+		goto loop;
+	}
+
+	"[b];" {
+		STACK_CHECK_DOWN_R(-1)
+		if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
+				<(128*1024*c->multiple[c->output_context]-64)){
+			c->buffers[c->output_context]+=
+				sprintf((char *)c->buffers[c->output_context],
+					"r=_fith_byte_array_alloc(c,r);");
+		} else {
+			if(expand_buffer(c)==0)
+			{
+				return r;
+			}
+		}
+		goto loop;
+	}
+
+	//~ "[].len" {
+		//~ STACK_CHECK_DOWN_R(-1)
+		//~ if((c->buffers[c->output_context]-c->buffers_start[c->output_context])
+				//~ <(128*1024*c->multiple[c->output_context]-64)){
+			//~ c->buffers[c->output_context]+=
+				//~ sprintf((char *)c->buffers[c->output_context],
+					//~ "r=_fith_array_len(c,r);");
+		//~ } else {
+			//~ if(expand_buffer(c)==0)
+			//~ {
+				//~ return r;
+			//~ }
+		//~ }
+		//~ goto loop;
+	//~ }
 
 	// new work flow. Check locals if any. Check functions. Check globals. Nothing found.
 	word {

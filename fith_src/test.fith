@@ -185,6 +185,7 @@ num_beasts 9 * .
 \~ ( top of stack value )	 \drop 'value on stack is' p . drop
 \~ end 'after case' p .
 
+
 clear -2 
 ( top of stack value )  case 
 ( top of stack value )	 -1 == ( IF THIS IS NOT ZERO-> ) if{ 'negative one' p  }
@@ -329,7 +330,15 @@ ion-each
 \=$cart2[#].i
 
 `c` `\n` . 
-100 []; dup [].len .
+100 []; . =arrayTest
+88  0 arrayTest =[]
+150 1 arrayTest =[]
+64  2 arrayTest =[]
+4   3 arrayTest =[]
+0 arrayTest [] .
+
+4 'hello world' [b] .
+
 
 \~ .
   : 'hello from anon function' =local : 'pre-hello' =local local p ; call  local  p ; call
