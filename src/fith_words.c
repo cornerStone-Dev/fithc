@@ -889,7 +889,8 @@ static inline Registers
 _fith_array_get(Context1 *c, Registers r)
 {
 	r.sp-=1;
-	r.tos = r.tos.v[r.sp->i];
+	//r.tos = r.tos.v[r.sp->i];
+	r.tos = r.sp->v[r.tos.i];
 	return r;
 }
 
@@ -897,7 +898,9 @@ static inline Registers
 _fith_array_set(Context1 *c, Registers r)
 {
 	r.sp-=3;
-	r.tos.v[(r.sp+2)->i] = *(r.sp+1);
+	//r.tos.v[(r.sp+2)->i] = *(r.sp+1);
+	//r.tos = *r.sp;
+	(r.sp+2)->v[r.tos.i] = *(r.sp+1);
 	r.tos = *r.sp;
 	return r;
 }

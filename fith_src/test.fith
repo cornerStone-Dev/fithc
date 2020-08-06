@@ -330,49 +330,73 @@ ion-each
 \=$cart2[#].i
 
 `c` `\n` . 
-100 []; . =arrayTest
-88  0 arrayTest =[]
-150 1 arrayTest =[]
-64  2 arrayTest =[]
-4   3 arrayTest =[]
-0 arrayTest [] .
+
 
 4 'hello world' [b] .
 
 
 \~ .
   : 'hello from anon function' =local : 'pre-hello' =local local p ; call  local  p ; call
+\ data structure for nodes
 
-\ $cart2 p
-\ 1 2 3 4 5 depth =$var[?].i puts it all into array
- \~ \## REQUEST FOR COMMENT
-\~ jeach \ goes once per element in array, pushes JSON value onto stack
-	\~ ( value is on top of the stack )
-	\~ ( do stuffs )
-\~ jdone
-\~ jeach \ goes once per element in array
-	\~ 5 2.2 
-	\~ jeach.a ( this pushes value on stack )
-\~ jdone
+. clear
 
-\~ jeach
-	\~ jeach.a 
-	\~ jeach
-		\~ jeach.b
-	\~ jdone
-\~ jdone
+100 []; . =arrayTest
+88  arrayTest 0  =[]
+150 arrayTest 1  =[]
+64  arrayTest 2  =[]
+4   arrayTest 3  =[]
+    arrayTest 0  [] .
+    arrayTest 1  [] .
+
+\ struct node def
+\ next[2]
+\ value
+\ key
+
+getNode.next[]: ( nodeptr num - next[num] )
+	[]
+;
+
+setNode.next[]: ( value nodeptr num -  )
+	=[]
+;
+
+getNode.value: ( nodeptr - node.value )
+	2 []
+;
+
+setNode.value: ( value nodeptr -  )
+	2 =[]
+;
+
+getNode.key: ( nodeptr - node.value )
+	3 []
+;
+
+setNode.key: ( value nodeptr -  )
+	3 =[]
+;
 
 
 
-		( x1 x2 x3 -- )
-		( #var1=x1 #var2=x2 #var3=x3 )
-\~ fact: { #var1 #var2 #var3 } 
-	\~ dup 1 > if{                     \ if{ 1 (or 0) \just leave on stack
-		\~ dup 1 - fact               \ next number down - get its factorial
-		 \~ * }                     \ and mult - leavin ans on stack
-\~ ;
-
-
+makeNode:
+	=value =key 
+	4 []; =node \ allocate node, save into local
+	0 node 0 setNode.next[]
+	0 node 1 setNode.next[]
+	key   node setNode.key
+	value node setNode.value
+	node
+;
+clear
+'test1 clear' p
+25 55  makeNode = myNode
+'test2' p
+'node key:' p myNode getNode.key . drop
+'node value:' p myNode getNode.value . drop
+'node next0:' p myNode 0 getNode.next[] . drop
+'node next1:' p myNode 1 getNode.next[] . drop
 
 
 

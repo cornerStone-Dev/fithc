@@ -5,8 +5,9 @@ tool/
 tool_output/
 SQLite3_Helper/
 gen/
-sqlite3/
+c_src/
 fith_src/script.fith
 *.geany
+*.s
 projects
 session.fith
